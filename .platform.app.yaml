@@ -1,0 +1,40 @@
+name: app
+type: php:7.1
+runtime:
+  extensions:
+    - redis
+build:
+  flavor: composer
+disk: 4000
+web:
+  locations:
+    "/":
+      root: "public"
+      index:
+        - index.php
+      allow: true
+      passthru: "/index.php"
+mounts:
+  "storage/app/public": "shared:files/public"
+  "storage/framework/views": "shared:files/views"
+  "storage/framework/sessions": "shared:files/sessions"
+  "storage/framework/cache": "shared:files/cache"
+  "storage/logs": "shared:files/logs"
+  "bootstrap/cache": "shared:files/bootstrap_cache"
+relationships:
+  database: "platform_sh:mysql"
+  redis: "rediscache:redis"
+dependencies:
+  ruby:
+    sass: "*"
+  nodejs:
+    gulp-cli: "*"
+    yarn: "*"
+hooks:
+  build: |
+    yarn install
+    npm run production
+    gzip -k public/js/app.js
+    gzip -k public/css/app.css
+  deploy: |
+    php artisan migrate --force
