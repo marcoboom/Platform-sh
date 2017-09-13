@@ -79,7 +79,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    My Platform.sh project
+                    My Platform.sh development
                 </div>
 
                 <div class="links">
